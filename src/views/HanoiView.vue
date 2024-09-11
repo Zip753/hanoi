@@ -95,15 +95,16 @@ const isCursorValid = computed(() => {
             class="block"
             v-for="(block, blockIdx) in tower"
             :key="block"
-            :class="{
-              cursor: isCursor(idx, blockIdx, tower),
-              'cursor-selected': isCursor(idx, blockIdx, tower) && isSelected,
-              'cursor-invalid': isCursor(idx, blockIdx, tower) && !isCursorValid
-            }"
+            :class="[
+              {
+                cursor: isCursor(idx, blockIdx, tower),
+                'cursor-selected': isCursor(idx, blockIdx, tower) && isSelected,
+                'cursor-invalid': isCursor(idx, blockIdx, tower) && !isCursorValid
+              },
+              `block-color-${(block % 3) + 1}`
+            ]"
             :style="{ '--block-number': block }"
-          >
-            {{ block }}
-          </div>
+          ></div>
         </div>
       </div>
       <div class="controls">
@@ -120,7 +121,6 @@ const isCursorValid = computed(() => {
   --blocks: v-bind(numBlocks);
   --block-height: 3rem;
   --block-gap: 0.5rem;
-  --block-border-width: 5px;
 
   --full-block-size: calc(var(--block-height));
 }
@@ -132,25 +132,24 @@ const isCursorValid = computed(() => {
 .tower-container {
   height: calc(var(--full-block-size) * var(--blocks) + var(--block-gap) * (var(--blocks) - 1));
 
-  outline: 1px red solid;
-
   display: grid;
   grid-template-columns: repeat(v-bind(numTowers), 1fr);
   gap: 2rem;
 }
 
 .tower {
-  outline: 2px green solid;
-
   display: flex;
   flex-flow: column-reverse;
   align-items: center;
   gap: var(--block-gap);
+  box-shadow: 0rem 3rem 1rem -2rem rgb(179, 200, 228);
 }
 
 .block {
-  border: var(--block-border-width) orange solid;
+  border: 4px var(--block-color) solid;
   border-radius: 2rem;
+  background-color: rgb(from var(--block-color) r g b / 0.6);
+
   min-height: var(--block-height);
 
   --block: var(--block-number, var(--blocks));
@@ -165,18 +164,43 @@ const isCursorValid = computed(() => {
   font-size: large;
 }
 
+.block-color-1 {
+  --block-color: rgb(103, 230, 187);
+}
+.block-color-2 {
+  --block-color: plum;
+}
+.block-color-3 {
+  --block-color: rgb(228, 212, 96);
+}
+
 .cursor {
-  background-color: rgba(from orange r g b / 0.3);
+  --cursor-color: rgb(from var(--block-color) r g b / 0.7);
+
+  border-color: var(--cursor-color);
+  background-color: rgb(from var(--cursor-color) r g b / 0.4);
+
   border-style: dashed;
 }
 
 .cursor-selected {
-  background-color: rgba(from orange r g b / 0.5);
   border-style: solid;
+  --cursor-color: rgb(255, 153, 0);
+  background-color: rgb(from var(--cursor-color) r g b / 0.6);
+
+  box-shadow: 0 0 0.7rem var(--cursor-color);
 }
 
 .cursor-invalid {
-  background-color: rgb(from red r g b / 0.7);
+  --cursor-color: rgb(from red r g b / 0.6);
+
+  background: repeating-linear-gradient(
+    135deg,
+    rgb(from var(--cursor-color) r g b / 0.3),
+    rgb(from var(--cursor-color) r g b / 0.3) 6px,
+    rgb(from var(--cursor-color) r g b / 0.6) 6px,
+    rgb(from var(--cursor-color) r g b / 0.6) 12px
+  );
 }
 
 .container {
