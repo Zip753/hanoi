@@ -1,20 +1,11 @@
 <script setup lang="ts">
+import { useTowersStore } from '@/stores/towers'
+import { storeToRefs } from 'pinia'
 import { computed, ref } from 'vue'
 
-const numTowers = 3
-const numBlocks = 6
-
-const startingTower: number[] = []
-for (let num = numBlocks; num >= 1; --num) {
-  startingTower.push(num)
-}
-
-const startingTowers: number[][] = [startingTower]
-for (let i = 0; i < numTowers - 1; ++i) {
-  startingTowers.push([])
-}
-
-const towers = ref(startingTowers)
+const towersStore = useTowersStore()
+const { towers, numBlocks } = storeToRefs(towersStore)
+const { NUM_TOWERS } = towersStore
 
 const cursor = ref(0)
 const isSelected = ref(false)
@@ -60,7 +51,7 @@ function moveRight() {
     return
   }
 
-  if (cursor.value < numTowers - 1) {
+  if (cursor.value < NUM_TOWERS - 1) {
     const valueToMove = towers.value[cursor.value].pop()
     if (valueToMove === undefined) {
       return
@@ -112,6 +103,9 @@ const isCursorValid = computed(() => {
         <button v-shortkey="['space']" @shortkey="toggle" @click="toggle">Toggle</button>
         <button v-shortkey="['arrowright']" @shortkey="moveRight" @click="moveRight">Right</button>
       </div>
+      <div class="congrats">
+        <h1 v-if="towersStore.isSolved">YOU DID IT!!!111</h1>
+      </div>
     </div>
   </div>
 </template>
@@ -133,7 +127,7 @@ const isCursorValid = computed(() => {
   height: calc(var(--full-block-size) * var(--blocks) + var(--block-gap) * (var(--blocks) - 1));
 
   display: grid;
-  grid-template-columns: repeat(v-bind(numTowers), 1fr);
+  grid-template-columns: repeat(v-bind(NUM_TOWERS), 1fr);
   gap: 2rem;
 }
 
