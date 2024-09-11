@@ -108,9 +108,9 @@ const isCursorValid = computed(() => {
         </div>
       </div>
       <div class="controls">
-        <button @click="moveLeft">Left</button>
-        <button @click="toggle">Toggle</button>
-        <button @click="moveRight">Right</button>
+        <button v-shortkey="['arrowleft']" @shortkey="moveLeft" @click="moveLeft">Left</button>
+        <button v-shortkey="['space']" @shortkey="toggle" @click="toggle">Toggle</button>
+        <button v-shortkey="['arrowright']" @shortkey="moveRight" @click="moveRight">Right</button>
       </div>
     </div>
   </div>
