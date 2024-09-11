@@ -3,13 +3,15 @@ import { useCursorStore } from '@/stores/cursor'
 import { useTowersStore } from '@/stores/towers'
 import { storeToRefs } from 'pinia'
 
+import ControlsPanel from '@/components/ControlsPanel.vue'
+
 const towersStore = useTowersStore()
 const { towers, numBlocks } = storeToRefs(towersStore)
 const { NUM_TOWERS } = towersStore
 
 const cursorStore = useCursorStore()
 const { isSelected } = storeToRefs(cursorStore)
-const { isCursor, isCursorValid, moveLeft, toggle, moveRight } = cursorStore
+const { isCursor, isCursorValid } = cursorStore
 </script>
 
 <template>
@@ -33,11 +35,7 @@ const { isCursor, isCursorValid, moveLeft, toggle, moveRight } = cursorStore
           ></div>
         </div>
       </div>
-      <div class="controls">
-        <button v-shortkey="['arrowleft']" @shortkey="moveLeft" @click="moveLeft">Left</button>
-        <button v-shortkey="['space']" @shortkey="toggle" @click="toggle">Toggle</button>
-        <button v-shortkey="['arrowright']" @shortkey="moveRight" @click="moveRight">Right</button>
-      </div>
+      <ControlsPanel />
       <div class="congrats">
         <h1 v-if="towersStore.isSolved">YOU DID IT!!!111</h1>
       </div>
@@ -135,11 +133,5 @@ const { isCursor, isCursorValid, moveLeft, toggle, moveRight } = cursorStore
 .container {
   display: grid;
   gap: 4rem;
-}
-
-.controls {
-  display: flex;
-  margin-inline: auto;
-  gap: 1rem;
 }
 </style>
